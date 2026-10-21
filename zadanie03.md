@@ -6,6 +6,7 @@ docker inspect:
 
 ## Docker history
 docker history:
+```
 IMAGE          CREATED          CREATED BY                                      SIZE      COMMENT
 419ddab0d987   22 minutes ago   EXPOSE [80/tcp]                                 0B        buildkit.dockerfile.v0
 <missing>      22 minutes ago   RUN /bin/sh -c htmlhint /usr/share/nginx/htm…   0B        buildkit.dockerfile.v0
@@ -32,9 +33,10 @@ IMAGE          CREATED          CREATED BY                                      
 <missing>      3 weeks ago      LABEL maintainer=NGINX Docker Maintainers <d…   0B        buildkit.dockerfile.v0
 <missing>      3 weeks ago      CMD ["/bin/sh"]                                 0B        buildkit.dockerfile.v0
 <missing>      3 weeks ago      ADD alpine-minirootfs-3.24.2-x86_64.tar.gz /…   8.42MB    buildkit.dockerfile.v0
+```
 
 ## Które warstwy pochodzą z obrazu bazowego, ktore z twojego Dockerfile, dlaczego niektóre mają rozmiar `0B` i dlaczego widać tylko twoją wartość `maintainer`?
-5 najnowszych wartstw pochodzi z mojego Dockerfile, wszystkie pozostałe z obrazu bazowego. Niektóre warstwy mają `0B`, ponieważ dopisały tylko metadane. Wartość 'maintainer' w pliku `Dockerfile` nadpisuje wartość z obrazu bazowego nginx, ponieważ nie mogą istnieć dwie różne wartości etykiety przypisane do tego samego klucza, dlatego widać tylko moją wartość
+3 najnowsze wartstwy pochodzą z mojego Dockerfile, wszystkie pozostałe z obrazu bazowego. Niektóre wpisy mają `0B`, ponieważ dopisały tylko metadane. Wartość 'maintainer' w pliku `Dockerfile` nadpisuje wartość z obrazu bazowego nginx, ponieważ nie mogą istnieć dwie różne wartości etykiety przypisane do tego samego klucza, dlatego widać tylko moją wartość
 
 # Podpunkt 2 
 
