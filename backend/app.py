@@ -38,6 +38,9 @@ def check():
     found = h in KNOWN_HASHES
     # TODO 2: zwróć JSON {"found": found}
     return jsonify({"found": found})
+@app.get("/health")
+def health():
+    return jsonify({"status":"ok"}), 200
 
 if __name__ == "__main__":
     # 0.0.0.0 = nasłuchuj na wszystkich interfejsach kontenera, nie tylko na jego localhost
