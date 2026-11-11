@@ -22,3 +22,15 @@ def test_plaintext_password_is_rejected(client):
     response = client.post("/check", json={"hash": "123456"})
     assert response.status_code == 400
 
+def test_uppercased_hash_is_found(client):
+    response = client.post("/check", json={"hash": LEAKED.upper()})
+    assert response.status_code == 200 
+    assert response.get_json() == {"found": True}
+
+def test_hash_length_39_is_rejected(client):
+    response = client.post("/check", json={"hash": LEAKED[:38]})
+    assert response.status_code == 400 
+
+def test_signs_outside_range_are_rejected(client):
+    response = client.post("/check", json={"hash": "g"*40})
+    assert response.status_code == 400 
