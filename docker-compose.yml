@@ -10,6 +10,13 @@ services:
 
   backend:
     build: ./backend
+    tmpfs:
+      - /tmp 
+    read_only: true               # system plików kontenera tylko do odczytu
+    cap_drop:
+      - ALL                       # odebranie wszystkich uprawnień jądra (capabilities)
+    security_opt:
+      - no-new-privileges:true    # proces nie może zyskać uprawnień (np. przez setuid)
     environment:
       DB_HOST: db
       DB_NAME: ${POSTGRES_DB}
