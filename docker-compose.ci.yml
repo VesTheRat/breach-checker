@@ -1,0 +1,5 @@
+# Weryfikacja w CI: backend z obrazu pobranego z rejestru zamiast budowania z ./backend
+services:
+  backend:
+    image: ${BACKEND_IMAGE}
+
