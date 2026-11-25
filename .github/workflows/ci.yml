@@ -39,10 +39,10 @@ jobs:
         run: echo "IMAGE=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/breach-checker-backend" >> "$GITHUB_ENV"
       - name: Logowanie do GHCR
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
-      - name: Budowanie obrazu produkcyjnego
-        run: docker build -t "$IMAGE:$GITHUB_SHA" -t "$IMAGE:latest" backend
+      - name: Budowanie obrazu produkcyjnego z tagiem commita
+        run: docker build -t "$IMAGE:$GITHUB_SHA" backend
       - name: Publikacja
-        run: docker push --all-tags "$IMAGE"
+        run: docker push "$IMAGE:$GITHUB_SHA"
 
   build-frontend:
     needs: test
@@ -57,9 +57,9 @@ jobs:
       - name: Logowanie do GHCR
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
       - name: Budowanie obrazu produkcyjnego
-        run: docker build -t "$IMAGE:$GITHUB_SHA" -t "$IMAGE:latest" frontend
+        run: docker build -t "$IMAGE:$GITHUB_SHA" frontend
       - name: Publikacja
-        run: docker push --all-tags "$IMAGE"
+        run: docker push "$IMAGE:$GITHUB_SHA"
   
   verify:
     needs: [build-and-push, build-frontend] 
@@ -93,3 +93,21 @@ jobs:
         if: failure()
         run: docker compose logs 
 
+promote:
+    needs: verify
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Logowanie do GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+      - name: Promocja obrazów na tag latest
+        run: |
+          docker pull "ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/breach-checker-backend:$GITHUB_SHA"
+          docker tag "ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/breach-checker-backend:$GITHUB_SHA" "ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/breach-checker-backend:latest"
+          docker push "ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/breach-checker-backend:latest"
+
+          docker pull "ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/breach-checker-frontend:$GITHUB_SHA"
+          docker tag "ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/breach-checker-frontend:$GITHUB_SHA" "ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/breach-checker-frontend:latest"
+          docker push "ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/breach-checker-frontend:latest"
