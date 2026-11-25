@@ -93,7 +93,7 @@ jobs:
         if: failure()
         run: docker compose logs 
 
-promote:
+  promote:
     needs: verify
     runs-on: ubuntu-24.04
     permissions:
