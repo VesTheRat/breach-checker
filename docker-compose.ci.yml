@@ -3,5 +3,5 @@ services:
   backend:
     image: ${BACKEND_IMAGE}
   frontend:
-    frontend: ${FRONTEND_IMAGE}
+    image: ${FRONTEND_IMAGE}
 
